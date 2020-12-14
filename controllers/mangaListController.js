@@ -32,10 +32,19 @@ exports.show = async (req, res) => {
 exports.update = async (req, res) => {
     let id = parseInt(req.params.idusuario);
     let idmanga = parseInt(req.params.idmanga);
-    const { capitulo, concluido, comentario } = req.body;
+    const { capitulo, comentario } = req.body;
 
     const response = await db.query(
-        "UPDATE mangalist SET capitulo = $1, concluido = $2, comentario = $3 WHERE idusuario = $4 and idmanga = $5", [ capitulo, concluido, comentario, id, idmanga]
+        "UPDATE mangalist SET capitulo = $1, comentario = $2 WHERE idusuario = $3 and idmanga = $4", [ capitulo, comentario, id, idmanga]
+    );
+
+    const mangaQuery = await db.query(
+        "SELECT * FROM manga where id = $1", [idmanga]
+    );
+    
+    const manga = mangaQuery.rows[0];
+    await db.query(
+        "SELECT consumo_status_manga($1, $2, $3, $4)", [capitulo, manga.capitulos, id, idmanga]
     );
 
     res.status(200).json({

@@ -32,11 +32,22 @@ exports.show = async (req, res) => {
 
 exports.update = async (req, res) => {
     let idusuario = parseInt(req.params.idusuario);
-    let idanime = parseInt(req.params.idusuario);
-    const {  assistido, concluido, comentario } = req.body;
+    let idanime = parseInt(req.params.idanime);
+    const {  assistido, comentario } = req.body;
 
     const response = await db.query(
-        "UPDATE animelist SET assistido = $1, concluido = $2, comentario = $3 WHERE idusuario = $4 and idanime = $5", [ assistido, concluido, comentario, idusuario, idanime ]
+        "UPDATE animelist SET assistido = $1, comentario = $2 WHERE idusuario = $3 and idanime = $4", [ assistido, comentario, idusuario, idanime ]
+    );
+    console.log("teste")
+    console.log(idanime)
+    const animeQuery = await db.query(
+        "SELECT * from anime where id = $1", [idanime]
+    );
+    console.log(animeQuery.rows)
+    const anime = animeQuery.rows[0];
+    console.log(anime)
+    await db.query(
+        "SELECT consumo_status_anime($1, $2, $3, $4)", [assistido, anime.episodios, idusuario, idanime]
     );
 
     res.status(200).json({
@@ -46,7 +57,7 @@ exports.update = async (req, res) => {
 
 exports.destroy = async (req, res) => {
     let idusuario = parseInt(req.params.idusuario);
-    let idanime = parseInt(req.params.idusuario);
+    let idanime = parseInt(req.params.idanime);
     await db.query("DELETE FROM animelist WHERE idusuario = $1 and idanime = $2", [idusuario, idanime]);
 
     res.status(200).json({

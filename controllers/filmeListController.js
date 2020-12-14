@@ -32,11 +32,22 @@ exports.show = async (req, res) => {
 exports.update = async (req, res) => {
     let id = parseInt(req.params.idusuario);
     let idfilme = parseInt(req.params.idfilme);
-    const { assistido, concluido, comentario } = req.body;
-
+    const { assistido, comentario } = req.body;
+    
     const response = await db.query(
-        "UPDATE filmelist SET assistido = $1, concluido = $2, comentario = $3 WHERE idusuario = $4 and idfilme = $5", [ assistido, concluido, comentario, id, idfilme ]
+        "UPDATE filmelist SET assistido = $1, comentario = $2 WHERE idusuario = $3 and idfilme = $4", [ assistido, comentario, id, idfilme ]
     );
+    
+    const filmeQuery = await db.query(
+        "SELECT * FROM filme where id = $1", [idfilme]
+    );
+    console.log(filmeQuery.rows);
+    const filme = filmeQuery.rows[0];
+
+    // chamando função de auto-update do estado do conteúdo
+    await db.query(
+        "SELECT consumo_status_filme($1::time without time zone, $2::time without time zone, $3, $4)", [assistido, filme.duracao, id, idfilme]
+    ); 
 
     res.status(200).json({
         message: "update complete"
