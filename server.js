@@ -5,13 +5,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // rotas
-const userRouter = require('./routers/userRouter');
-const animeRouter = require('./routers/animeRouter');
-const mangaRouter = require('./routers/mangaRouter');
-const filmeRouter = require('./routers/filmeRouter');
-const animeListRouter = require('./routers/animeListRouter');
-const filmeListRouter = require('./routers/filmeListRouter');
-const mangaListRouter = require('./routers/mangaListRouter');
+const userRouter = require('./routes/userRoute');
+const animeRouter = require('./routes/animeRoute');
+const mangaRouter = require('./routes/mangaRoute');
+const filmeRouter = require('./routes/filmeRoute');
+const animeListRouter = require('./routes/animeListRoute');
+const filmeListRouter = require('./routes/filmeListRoute');
+const mangaListRouter = require('./routes/mangaListRoute');
 
 app.use(userRouter);
 app.use(animeRouter);

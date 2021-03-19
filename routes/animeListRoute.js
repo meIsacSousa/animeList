@@ -9,6 +9,7 @@ router.put('/api/animelist/:idusuario/:idanime', controller.update);
 router.delete('/api/animelist/:idusuario/:idanime', controller.destroy);
 // concluido, andamento ou não iniciado (0 - 1 - 2)
 router.get('/api/animelist/search/status/:idusuario/:status', controller.findByStatus);
+router.get('/pdf/animelist', controller.animePDF);
 
 
 module.exports = router;

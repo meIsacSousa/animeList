@@ -1,5 +1,9 @@
 const db = require('../config/database.js');
+const PDFKit = require('pdfkit');
+const fs = require('fs');
 
+
+const pdf = new PDFKit();
 
 exports.store = async (req, res) => {
     const { idusuario, idanime, assistido, concluido, comentario } = req.body;
@@ -86,4 +90,16 @@ exports.showOnlyOne = async (req, res) => {
     );
     
     res.json(response.rows).status(200);
+}
+
+exports.animePDF = async (req, res) => {
+    pdf
+        .fontSize('13')
+        .text('Anime List', {
+            align: 'center'
+        })
+        .text('Anime I');
+    pdf.pipe(fs.createWriteStream('animeList.pdf'));
+    pdf.end();
+    res.json().status();
 }
